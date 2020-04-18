@@ -1,0 +1,32 @@
+#include <ros.h>
+#include <std_msgs/Int16.h>
+ros::NodeHandle nh;
+std_msgs::Int16msg;
+ros::Publisher pub("sensor", &msg);// defines pins numbersconst 
+
+int echoPinFront = 5;
+const int trigPinFront = A4;// defines variableslong duration;
+int distance;
+
+void setup() 
+{pinMode(trigPinFront, OUTPUT); // Sets the trigPin as an
+ OutputpinMode(echoPinFront, INPUT); // Sets the echoPin as an Input
+ 
+ nh.initNode();
+ nh.advertise(pub);
+ }
+
+ void loop() {
+ int distancecenter = ultrasonic(echoPinFront,trigPinFront);
+ msg.data = distancecenter;
+ pub.publish( &msg);
+ nh.spinOnce();
+ delay(100); //wait for 1/10th of a second.
+int ultrasonic(int echoPin, int trigPin) {// Clears the trigPindigitalWrite(trigPin, LOW);
+delayMicroseconds(2);// Sets the trigPin on HIGH state for 10 micro secondsdigitalWrite(trigPin, HIGH);
+delayMicroseconds(10);
+digitalWrite(trigPin, LOW);// Reads the echoPin, returns the sound wave travel time in microseconds
+duration = pulseIn(echoPin, HIGH);// Calculating the distance
+distance= duration*0.034/2;
+return distance;
+}
